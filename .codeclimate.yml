@@ -1,3 +1,6 @@
+engines:
+  eslint:
+    enabled: false
 languages:
   Ruby: false
   JavaScript: true
