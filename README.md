@@ -3,7 +3,7 @@
 [![Package Version](https://badge.fury.io/js/clavem.js.png)](http://badge.fury.io/js/clavem.js)
 [![Dependency Status](https://gemnasium.com/ShogunPanda/clavem.js.png?travis)](https://gemnasium.com/ShogunPanda/clavem.js)
 [![Build Status](https://secure.travis-ci.org/ShogunPanda/clavem.js.png?branch=master)](http://travis-ci.org/ShogunPanda/clavem.js)
-[![Coverage Status](https://coveralls.io/repos/ShogunPanda/clavem.js/badge.png)](https://coveralls.io/r/ShogunPanda/clavem.js)
+[![Coverage Status](https://coveralls.io/repos/github/ShogunPanda/clavem.js/badge.svg?branch=master)](https://coveralls.io/github/ShogunPanda/clavem.js?branch=master)
 
 A local callback server for oAuth web-flow.
 
