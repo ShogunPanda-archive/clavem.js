@@ -33,6 +33,8 @@ The executable will open the user's browser, handle the authentication and then 
 
 ## Usage from the API
 
+You need at least Node 6.0.
+
 The API equivalent for the CLI example above is like the following:
 
 ```javascript
