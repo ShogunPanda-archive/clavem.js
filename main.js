@@ -26,10 +26,10 @@ class Clavem{
   /**
    * Creates a new Clavem object.
    *
-   * @param host {string} The HTTP address where bind for replies. Default is `locahost`.
-   * @param port {string | number} The HTTP port where bind for replies. Default is `7772`.
-   * @param command {string} The command to use to open the authentication URL. Default is `open \"{{URL}}\"`, where `{{URL}}` will replaced with the URL.
-   * @param secure {boolean} If use HTTPS on the listening server.
+   * @param {string} host The HTTP address where bind for replies. Default is `locahost`.
+   * @param {string | number} port The HTTP port where bind for replies. Default is `7772`.
+   * @param {string} command The command to use to open the authentication URL. Default is `open \"{{URL}}\"`, where `{{URL}}` will replaced with the URL.
+   * @param {boolean} secure If use HTTPS on the listening server.
    */
   constructor(host, port, command, secure = false){
     // Copy arguments
@@ -39,20 +39,20 @@ class Clavem{
      * @type {string}
      */
     this.host = host;
-  
+
     /**
      * The HTTP port where bind for replies.
      * @type {number}
      */
     this.port = port;
-  
+
     /**
      * The command to use to open the authentication URL. Default is `open \"{{URL}}\"`, where `{{URL}}` will replaced with the URL.
      *
      * @type {string}
      */
     this.command = command;
-    
+
     /**
      * If use HTTPS on the listening server.
      * @type {boolean}
@@ -66,35 +66,35 @@ class Clavem{
      * @type {function}
      */
     this.responseHandler = Clavem.defaultHandler.bind(this);
-  
+
     /**
      * The template used to render a response on the browser.
      *
      * @type {string}
      */
     this.responsePage = fs.readFileSync(path.resolve(__dirname, "./defaultResponse.html")).toString(); // eslint-disable-line no-sync
-  
+
     /**
      * The current status of the authentication.
      *
      * @type {string}
      */
     this.status = "waiting";
-  
+
     /**
      * The authentication token.
      *
      * @type {string | object | null}
      */
     this.token = null;
-  
+
     /**
      * The last occurred error.
      *
      * @type {Error}
      */
     this.error = null;
-  
+
     /**
      * The current listening server.
      *
@@ -114,7 +114,7 @@ class Clavem{
     else
       this.port = Clavem.defaultPort;
   }
-  
+
   /**
    * Checks if the authentication has completed (successfully or not).
    *
@@ -123,7 +123,7 @@ class Clavem{
   completed(){
     return this.status !== "waiting";
   }
-  
+
   /**
    * Checks if the authentication has finished with success.
    *
@@ -132,7 +132,7 @@ class Clavem{
   succeeded(){
     return this.status === "succeeded";
   }
-  
+
   /**
    * Checks if the authentication has failed (either for being denied or for any kind of error).
    *
@@ -141,7 +141,7 @@ class Clavem{
   failed(){
     return this.status !== "waiting" && this.status !== "succeeded";
   }
-  
+
   /**
    * Checks if during the authentication any error has occurred.
    *
@@ -150,7 +150,7 @@ class Clavem{
   errored(){
     return this.status === "errored";
   }
-  
+
   /**
    * Checks if the authentication has been denied by the platform.
    *
@@ -159,7 +159,7 @@ class Clavem{
   denied(){
     return this.status === "denied";
   }
-  
+
   /**
    * Checks if the authentication has timed out.
    *
@@ -191,7 +191,7 @@ class Clavem{
     this.status = "waiting";
     this.token = null;
     this.error = null;
-  
+
     // Allow omitting intermediate arguments
     for(let i = args.length - 1; i > -1; i--){
       switch(typeof args[i]){
@@ -242,7 +242,7 @@ class Clavem{
         });
     });
   }
-  
+
   /**
    * @param {string} url @nodoc
    * @param {number} timeout @nodoc
@@ -278,7 +278,7 @@ class Clavem{
         this.timeout = setTimeout(() => this._handleTimeout(reject), timeout);
     });
   }
-  
+
   /**
    * @param {string} url @nodoc
    * @param {function} callback @nodoc
@@ -314,7 +314,7 @@ class Clavem{
       });
     });
   }
-  
+
   /**
    *
    * @param {function} callback @nodoc
@@ -359,7 +359,7 @@ class Clavem{
       cert: fs.readFileSync(path.resolve(__dirname, "ssl/server.crt")) // eslint-disable-line no-sync
     };
   }
-  
+
   /**
    * @param {string} url @nodoc
    * @param {function} skipCallback @nodoc
@@ -389,7 +389,7 @@ class Clavem{
 
     return url;
   }
-  
+
   /**
    * @param {function} resolve @nodoc
    * @param {function} reject @nodoc
@@ -428,7 +428,7 @@ class Clavem{
       });
     });
   }
-  
+
   /**
    * @param {function} reject @nodoc
    * @private
@@ -439,7 +439,7 @@ class Clavem{
 
     this._closeServer().then(() => reject(new ClavemError("timeout", "Authorization timeout.")));
   }
-  
+
   /**
    * @param {function} callback @nodoc
    * @param {array} args @nodoc
@@ -482,8 +482,8 @@ Clavem.defaultCommand = "open \"{{URL}}\"";
 /**
  * The default handler to process incoming requests.
  *
- * @param req {object} The Express request object.
- * @param callback {function} The callback to invoke when all the operations are finished.
+ * @param {object} req The Express request object.
+ * @param {function} callback The callback to invoke when all the operations are finished.
  */
 Clavem.defaultHandler = function(req, callback){
   // The default handler only forwards the oauth_token parameter
