@@ -9,9 +9,13 @@ A local callback server for oAuth web-flow.
 
 https://github.com/ShogunPanda/clavem.js
 
+## Supported implementations.
+
+Clavem.js supports and has been tested on [NodeJS](http://nodejs.org) 6.0+. 
+
 ## Usage from the CLI
 
-clavem.js allows you to handle a full oAuth authentication flow directly from the console.
+Clavem.js allows you to handle a full oAuth authentication flow directly from the console.
 
 Simply install it by issuing:
 
@@ -32,8 +36,6 @@ where `manage_pages` must be a comma separated list of scopes you want to have a
 The executable will open the user's browser, handle the authentication and then print the result both on the browser and on the console.
 
 ## Usage from the API
-
-You need at least Node 6.0.
 
 The API equivalent for the CLI example above is like the following:
 
