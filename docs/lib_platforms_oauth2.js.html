@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>lib/platforms/oauth2.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Clavem.html">Clavem</a><ul class='methods'><li data-type='method'><a href="Clavem.html#.defaultHandler">defaultHandler</a></li><li data-type='method'><a href="Clavem.html#authorize">authorize</a></li><li data-type='method'><a href="Clavem.html#completed">completed</a></li><li data-type='method'><a href="Clavem.html#denied">denied</a></li><li data-type='method'><a href="Clavem.html#errored">errored</a></li><li data-type='method'><a href="Clavem.html#failed">failed</a></li><li data-type='method'><a href="Clavem.html#succeeded">succeeded</a></li><li data-type='method'><a href="Clavem.html#timedOut">timedOut</a></li></ul></li><li><a href="clavem.errors.ClavemError.html">ClavemError</a></li><li><a href="clavem.platforms.BasePlatform.html">BasePlatform</a><ul class='methods'><li data-type='method'><a href="clavem.platforms.BasePlatform.html#buildUrl">buildUrl</a></li><li data-type='method'><a href="clavem.platforms.BasePlatform.html#callbackUrl">callbackUrl</a></li></ul></li><li><a href="clavem.platforms.DropboxPlatform.html">DropboxPlatform</a></li><li><a href="clavem.platforms.FacebookPlatform.html">FacebookPlatform</a></li><li><a href="clavem.platforms.GithubPlatform.html">GithubPlatform</a></li><li><a href="clavem.platforms.GooglePlatform.html">GooglePlatform</a></li><li><a href="clavem.platforms.InstagramPlatform.html">InstagramPlatform</a></li><li><a href="clavem.platforms.LinkedInPlatform.html">LinkedInPlatform</a></li><li><a href="clavem.platforms.LivePlatform.html">LivePlatform</a></li><li><a href="clavem.platforms.OAuth1Platform.html">OAuth1Platform</a><ul class='methods'><li data-type='method'><a href="clavem.platforms.OAuth1Platform.html#buildUrl">buildUrl</a></li><li data-type='method'><a href="clavem.platforms.OAuth1Platform.html#handleResponse">handleResponse</a></li></ul></li><li><a href="clavem.platforms.OAuth2Platform.html">OAuth2Platform</a><ul class='methods'><li data-type='method'><a href="clavem.platforms.OAuth2Platform.html#buildUrl">buildUrl</a></li><li data-type='method'><a href="clavem.platforms.OAuth2Platform.html#handleResponse">handleResponse</a></li></ul></li><li><a href="clavem.platforms.PinterestPlatform.html">PinterestPlatform</a><ul class='methods'><li data-type='method'><a href="clavem.platforms.PinterestPlatform.html#buildUrl">buildUrl</a></li></ul></li><li><a href="clavem.platforms.TumblrPlatform.html">TumblrPlatform</a></li><li><a href="clavem.platforms.TwitterPlatform.html">TwitterPlatform</a></li></ul><h3>Modules</h3><ul><li><a href="clavem.module_cli.html">cli</a></li><li><a href="clavem.module_validations.html">validations</a><ul class='methods'><li data-type='method'><a href="clavem.module_validations.html#.isPresent">isPresent</a></li><li data-type='method'><a href="clavem.module_validations.html#.validatePort">validatePort</a></li><li data-type='method'><a href="clavem.module_validations.html#.validateTimeout">validateTimeout</a></li><li data-type='method'><a href="clavem.module_validations.html#.validateUrl">validateUrl</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="clavem.errors.html">errors</a></li><li><a href="clavem.platforms.html">platforms</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">lib/platforms/oauth2.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * This file is part of the clavem.js npm package. Copyright (C) 2016 and above Shogun &lt;shogun@cowtech.it>.
+ * Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
+ */
+
+const request = require("request");
+const BasePlatform = require("./base");
+
+const HTTP_STATUS_OK = 200;
+
+/**
+ * A oAuth 2.0 platform for Clavem.
+ *
+ * @memberOf clavem.platforms
+ */
+class OAuth2Platform extends BasePlatform{
+  /**
+   * Creates a new platform.
+   *
+   * @param {Clavem} client The Clavem client.
+   */
+  constructor(client){
+    super(client);
+  
+    /**
+     * The HTTP method to use to get the access token.
+     *
+     * @type {string}
+     */
+    this.accessTokenMethod = "post";
+  }
+  
+  /**
+   * Builds the URL where redirect the user's browser to.
+   * @param url The base URL with credentials informations.
+   * @returns {string} The URL where redirect the user's browser to.
+   */
+  buildUrl(url){
+    this._extractCredentials(url);
+
+    const query = this._authorizePayload(url);
+    if(typeof url.path === "string" &amp;&amp; url.path.length > 1)
+      query.scope = url.path.substring(1);
+
+    const returnUrl = Object.assign(this.urlParser.parse(this.authorizeUrl), {query, href: null});
+    return this.urlParser.format(returnUrl);
+  }
+  
+  /**
+   * Handles the final authentication response from the user's browser.
+   *
+   * @param req {object} The Express request object.
+   * @param callback {function} The callback to invoke when all the operations are finished.
+   * @returns {object} The callback return value.
+   */
+  handleResponse(req, callback){
+    req = this._ensureValidRequest(req);
+
+    // Authorization denied
+    const generalError = req.query.error;
+    const code = req.query.code;
+
+    if(generalError || !code){
+      if(!generalError || generalError === "access_denied" || generalError === "user_cancelled_authorize")
+        return callback(null);
+
+      return callback(req.query.error_description);
+    }
+
+    // Access code, let's exchange with a token
+    return this._exchangeCode(code, callback);
+  }
+
+  // Private methods
+  /**
+   * @param url {string} @nodoc
+   * @returns {object} @nodoc
+   * @private
+   */
+  _authorizePayload(url){ // eslint-disable-line no-unused-vars
+    return {client_id: this.clientId, response_type: "code", redirect_uri: this.callbackUrl()}; // eslint-disable-line camelcase
+  }
+  
+  /**
+   * @param code {string} @nodoc
+   * @returns {object} @nodoc
+   * @private
+   */
+  _exchangeCodePayload(code){
+    return {client_id: this.clientId, client_secret: this.clientSecret, redirect_uri: this.callbackUrl(), grant_type: "authorization_code", code}; // eslint-disable-line camelcase
+  }
+  
+  /**
+   * @param token {string} @nodoc
+   * @returns {object} @nodoc
+   * @private
+   */
+  _refreshTokenPayload(token){
+    return {client_id: this.clientId, client_secret: this.clientSecret, grant_type: "refresh_token", refresh_token: token}; // eslint-disable-line camelcase
+  }
+  
+  /**
+   * @param code {string} @nodoc
+   * @param callback {function} @nodoc
+   * @private
+   */
+  _exchangeCode(code, callback){
+    // Build args
+    let args = this._exchangeCodePayload(code);
+    args = this.accessTokenMethod !== "post" ? {qs: args} : {form: args};
+
+    request[this.accessTokenMethod](Object.assign({url: this.accessTokenUrl, json: true}, args), (error, response, body) => {
+      if(error)
+        return callback(error);
+
+      body = this._parseBody(body);
+
+      // Request failed, abort
+      if(response.statusCode !== HTTP_STATUS_OK)
+        return callback(`Invalid code exchange response: [${response.statusCode}] ${JSON.stringify(body)}`);
+
+      // Replace with long lived access token, if needed
+      if(this.refreshTokenUrl)
+        return this._refreshToken(body.refresh_token || body.access_token, callback);
+
+      return callback(null, body.access_token);
+    });
+  }
+  
+  /**
+   * @param token {string} @nodoc
+   * @param callback {function} @nodoc
+   * @private
+   */
+  _refreshToken(token, callback){
+    // Build args
+    let args = this._refreshTokenPayload(token);
+    args = this.accessTokenMethod !== "post" ? {qs: args} : {form: args};
+
+    // Make the request
+    request[this.accessTokenMethod](Object.assign({url: this.refreshTokenUrl, json: true}, args), (error, response, body) => {
+      if(error)
+        return callback(error);
+
+      body = this._parseBody(body);
+
+      // Request failed, abort
+      if(response.statusCode !== HTTP_STATUS_OK)
+        return callback(`Invalid refresh token exchange response: [${response.statusCode}] ${JSON.stringify(body)}`);
+
+      // Return the obtained token
+      return callback(null, body.access_token);
+    });
+  }
+}
+
+module.exports = OAuth2Platform;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Aug 18 2016 10:48:37 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+{
+  "name": "clavem.js",
+  "version": "1.0.0",
+  "description": "A local callback server for oAuth web-flow.",
+  "main": "main.js",
+  "files": [
+    "bin",
+    "defaultResponse.html",
+    "main.js",
+    "lib",
+    "ssl",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "postpublish": "git push origin --tags && git push origin",
+    "test": "./node_modules/.bin/mocha test/**/*.js",
+    "posttest": "./node_modules/.bin/eslint main.js bin/* lib utils/*.js test/* test/platforms/*",
+    "coverage": "./node_modules/.bin/istanbul --report=html cover ./node_modules/.bin/_mocha test/* test/platforms/*",
+    "travis-ci": "./node_modules/.bin/istanbul --report=lcovonly cover ./node_modules/.bin/_mocha test/* test/platforms/* && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "docs": "./node_modules/.bin/jsdoc -c .jsdoc.json -t ./node_modules/minami -R README.md -r"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ShogunPanda/clavem.js"
+  },
+  "keywords": [
+    "clavem.js",
+    "oauth",
+    "oauth2"
+  ],
+  "author": "Shogun <shogun@cowtech.it>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ShogunPanda/clavem.js/issues"
+  },
+  "homepage": "https://github.com/ShogunPanda/clavem.js",
+  "dependencies": {
+    "commander": "~2.9.0",
+    "express": "~4.14.0",
+    "mustache": "~2.2.1",
+    "request": "~2.73.0"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "chai-as-promised": "~5.3.0",
+    "chai-http": "~3.0.0",
+    "coveralls": "~2.11.9",
+    "eslint": "~2.13.0",
+    "istanbul": "~0.4.3",
+    "jsdoc": "~3.4.0",
+    "minami": "^1.1.1",
+    "mocha": "~2.5.3",
+    "sinon": "~1.17.4"
+  }
+}

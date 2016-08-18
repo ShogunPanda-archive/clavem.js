@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>lib/platforms/oauth1.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Clavem.html">Clavem</a><ul class='methods'><li data-type='method'><a href="Clavem.html#.defaultHandler">defaultHandler</a></li><li data-type='method'><a href="Clavem.html#authorize">authorize</a></li><li data-type='method'><a href="Clavem.html#completed">completed</a></li><li data-type='method'><a href="Clavem.html#denied">denied</a></li><li data-type='method'><a href="Clavem.html#errored">errored</a></li><li data-type='method'><a href="Clavem.html#failed">failed</a></li><li data-type='method'><a href="Clavem.html#succeeded">succeeded</a></li><li data-type='method'><a href="Clavem.html#timedOut">timedOut</a></li></ul></li><li><a href="clavem.errors.ClavemError.html">ClavemError</a></li><li><a href="clavem.platforms.BasePlatform.html">BasePlatform</a><ul class='methods'><li data-type='method'><a href="clavem.platforms.BasePlatform.html#buildUrl">buildUrl</a></li><li data-type='method'><a href="clavem.platforms.BasePlatform.html#callbackUrl">callbackUrl</a></li></ul></li><li><a href="clavem.platforms.DropboxPlatform.html">DropboxPlatform</a></li><li><a href="clavem.platforms.FacebookPlatform.html">FacebookPlatform</a></li><li><a href="clavem.platforms.GithubPlatform.html">GithubPlatform</a></li><li><a href="clavem.platforms.GooglePlatform.html">GooglePlatform</a></li><li><a href="clavem.platforms.InstagramPlatform.html">InstagramPlatform</a></li><li><a href="clavem.platforms.LinkedInPlatform.html">LinkedInPlatform</a></li><li><a href="clavem.platforms.LivePlatform.html">LivePlatform</a></li><li><a href="clavem.platforms.OAuth1Platform.html">OAuth1Platform</a><ul class='methods'><li data-type='method'><a href="clavem.platforms.OAuth1Platform.html#buildUrl">buildUrl</a></li><li data-type='method'><a href="clavem.platforms.OAuth1Platform.html#handleResponse">handleResponse</a></li></ul></li><li><a href="clavem.platforms.OAuth2Platform.html">OAuth2Platform</a><ul class='methods'><li data-type='method'><a href="clavem.platforms.OAuth2Platform.html#buildUrl">buildUrl</a></li><li data-type='method'><a href="clavem.platforms.OAuth2Platform.html#handleResponse">handleResponse</a></li></ul></li><li><a href="clavem.platforms.PinterestPlatform.html">PinterestPlatform</a><ul class='methods'><li data-type='method'><a href="clavem.platforms.PinterestPlatform.html#buildUrl">buildUrl</a></li></ul></li><li><a href="clavem.platforms.TumblrPlatform.html">TumblrPlatform</a></li><li><a href="clavem.platforms.TwitterPlatform.html">TwitterPlatform</a></li></ul><h3>Modules</h3><ul><li><a href="clavem.module_cli.html">cli</a></li><li><a href="clavem.module_validations.html">validations</a><ul class='methods'><li data-type='method'><a href="clavem.module_validations.html#.isPresent">isPresent</a></li><li data-type='method'><a href="clavem.module_validations.html#.validatePort">validatePort</a></li><li data-type='method'><a href="clavem.module_validations.html#.validateTimeout">validateTimeout</a></li><li data-type='method'><a href="clavem.module_validations.html#.validateUrl">validateUrl</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="clavem.errors.html">errors</a></li><li><a href="clavem.platforms.html">platforms</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">lib/platforms/oauth1.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * This file is part of the clavem.js npm package. Copyright (C) 2016 and above Shogun &lt;shogun@cowtech.it>.
+ * Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
+ */
+
+const request = require("request");
+const BasePlatform = require("./base");
+
+const HTTP_STATUS_OK = 200;
+
+/**
+ * A oAuth 1.0a platform for Clavem.
+ *
+ * @memberOf clavem.platforms
+ */
+class OAuth1Platform extends BasePlatform{
+  /**
+   * Builds the URL where redirect the user's browser to.
+   * @param url The base URL with credentials informations.
+   * @returns {Promise} A promise which will contain the URL where redirect the user's browser to.
+   */
+  buildUrl(url){
+    this._extractCredentials(url);
+
+    return new Promise((resolve, reject) => {
+      request.post({
+        url: this.requestTokenUrl,
+        oauth: {consumer_key: this.clientId, consumer_secret: this.clientSecret, callback: this.callbackUrl()} // eslint-disable-line camelcase
+      }, (error, response, body) => {
+        if(error)
+          return reject(error);
+
+        body = this._parseBody(body);
+
+        // Request failed, abort
+        if(response.statusCode !== HTTP_STATUS_OK)
+          return reject(`Invalid request token response: [${response.statusCode}] ${JSON.stringify(body)}`);
+
+        // Save OAuth details for later
+        /**
+         * The oAuth request token.
+         *
+         * @type {string}
+         */
+        this.oauthToken = body.oauth_token; // eslint-disable-line camelcase
+  
+        /**
+         * The oAuth request secret.
+         *
+         * @type {string}
+         */
+        this.oauthSecret = body.oauth_token_secret; // eslint-disable-line camelcase
+
+        // Build the URL
+        const returnUrl = Object.assign(this.urlParser.parse(this.authenticateUrl), {query: {oauth_token: this.oauthToken}}); // eslint-disable-line camelcase
+        return resolve(this.urlParser.format(returnUrl));
+      });
+    });
+  }
+  
+  /**
+   * Handles the final authentication response from the user's browser.
+   *
+   * @param req {object} The Express request object.
+   * @param callback {function} The callback to invoke when all the operations are finished.
+   * @returns {object} The callback return value.
+   */
+  handleResponse(req, callback){
+    req = this._ensureValidRequest(req);
+
+    if(req.query.denied || !req.query.oauth_verifier)
+      return callback(null);
+
+    // Exchange request token with access token
+    return request.post({
+      url: this.accessTokenUrl,
+      oauth: {
+        consumer_key: this.clientId, consumer_secret: this.clientSecret, // eslint-disable-line camelcase
+        token: this.oauthToken, token_secret: this.oauthSecret, verifier: req.query.oauth_verifier // eslint-disable-line camelcase
+      }
+    }, (error, response, body) => {
+      if(error)
+        return callback(error);
+
+      body = this._parseBody(body);
+
+      if(response.statusCode !== HTTP_STATUS_OK)
+        return callback(`Invalid access token response: [${response.statusCode}] ${JSON.stringify(body)}`);
+
+      return callback(null, {token: body.oauth_token, secret: body.oauth_token_secret}); // eslint-disable-line camelcase
+    });
+  }
+}
+
+module.exports = OAuth1Platform;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Aug 18 2016 10:48:37 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
