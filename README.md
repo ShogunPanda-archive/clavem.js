@@ -28,7 +28,7 @@ Then run the command providing the main URL.
 Let's say you have a Facebook Apps whose id is `abcd` and secret is `1234`, you can obtain a token by running:
  
 ```bash
-clavem "facebook://abcd:1234@facebook/manage_pages"
+clavem "clavem://abcd:1234@facebook/manage_pages"
 ```
 
 where `manage_pages` must be a comma separated list of scopes you want to have access to.
@@ -44,7 +44,7 @@ const Clavem = require("clavem");
 
 const client = new Clavem();
 
-client.authorize("facebook://abcd:1234@facebook/manage_pages")
+client.authorize("clavem://abcd:1234@facebook/manage_pages")
     .then(token => {
         console.log(`SUCCESS: Authorization succeded. The authorization token is: ${token}`);
     })

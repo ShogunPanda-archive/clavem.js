@@ -36,6 +36,22 @@ describe("CLI", function(){
     });
   });
 
+  it("should correctly handle allowed authorizations in silent mode", function(){
+    process.argv[2] = "-S";
+    process.argv[3] = "http://google.it";
+
+    const logStub = sinon.stub(console, "log");
+
+    this.cliMock.expects("authorize").returns(Promise.resolve("TOKEN"));
+
+    return expect(clavemCLI()).to.be.fulfilled.then(() => {
+      this.cliMock.verify();
+      logStub.restore();
+
+      expect(logStub.calledWith("TOKEN")).to.be.ok;
+    });
+  });
+
   it("should correctly handle denied authorizations", function(){
     const errorStub = sinon.stub(console, "error");
 

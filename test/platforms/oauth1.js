@@ -20,7 +20,7 @@ chai.use(chaiAsPromised);
 
 describe("OAuth1Platform", function(){
   beforeEach(function(){
-    this.subject = new OAuth1Platform({host: "HOST", port: 123, secure: true});
+    this.subject = new OAuth1Platform({redirectUrl: "https://HOST:123/"});
     this.subject.requestTokenUrl = "http://localhost/request";
     this.subject.authenticateUrl = "http://localhost/authenticate";
     this.subject.accessTokenUrl = "http://localhost/access";
@@ -30,7 +30,7 @@ describe("OAuth1Platform", function(){
     it("should get a access token, save the token and the secret and then return the valid URL", function(){
       const requestStub = sinon.stub(request, "post").yields(null, {statusCode: 200}, "oauth_token=TOKEN&oauth_token_secret=SECRET");
 
-      const url = Validations.validateUrl("clavem://id:secret@pinterest", true);
+      const url = Validations.validateUrl("clavem://id:secret@pinterest", true, false);
 
       return expect(this.subject.buildUrl(url)).to.become("http://localhost/authenticate?oauth_token=TOKEN").then(() => {
         requestStub.restore();
@@ -47,7 +47,7 @@ describe("OAuth1Platform", function(){
     it("should handle network errors", function(){
       const requestStub = sinon.stub(request, "post").yields("FAILED");
 
-      const url = Validations.validateUrl("clavem://id:secret@pinterest", true);
+      const url = Validations.validateUrl("clavem://id:secret@pinterest", true, false);
 
       return expect(this.subject.buildUrl(url)).to.be.rejected.then(error => {
         requestStub.restore();
@@ -58,7 +58,7 @@ describe("OAuth1Platform", function(){
     it("should handle denied requests", function(){
       const requestStub = sinon.stub(request, "post").yields(null, {statusCode: 401}, {a: 1});
 
-      const url = Validations.validateUrl("clavem://id:secret@pinterest", true);
+      const url = Validations.validateUrl("clavem://id:secret@pinterest", true, false);
 
       return expect(this.subject.buildUrl(url)).to.be.rejected.then(error => {
         requestStub.restore();

@@ -11,7 +11,7 @@ const GooglePlatform = require("../../lib/platforms/google");
 
 describe("GooglePlatform", function(){
   beforeEach(function(){
-    this.subject = new GooglePlatform({host: "HOST", port: 123, secure: true});
+    this.subject = new GooglePlatform({redirectUrl: "https://HOST:123/"});
     this.subject.clientId = "ID";
   });
 

@@ -58,7 +58,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Clavem"><span class="type-signature"></span>new Clavem<span class="signature">(host, port, command, secure)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Clavem"><span class="type-signature"></span>new Clavem<span class="signature">(redirectUrl, command)</span><span class="type-signature"></span></h4>
 
     
 
@@ -101,7 +101,7 @@
 
         <tr>
             
-                <td class="name"><code>host</code></td>
+                <td class="name"><code>redirectUrl</code></td>
             
 
             <td class="type">
@@ -117,33 +117,7 @@
 
             
 
-            <td class="description last"><p>The HTTP address where bind for replies. Default is <code>locahost</code>.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>port</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The HTTP port where bind for replies. Default is <code>7772</code>.</p></td>
+            <td class="description last"><p>The URL where redirect the authorization URL to. It will listen to the URL port locally. Default is <code>http://localhost:7772</code>.</p></td>
         </tr>
 
     
@@ -167,29 +141,6 @@
             
 
             <td class="description last"><p>The command to use to open the authentication URL. Default is <code>open \&quot;{{URL}}\&quot;</code>, where <code>{{URL}}</code> will replaced with the URL.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>secure</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>If use HTTPS on the listening server.</p></td>
         </tr>
 
     
@@ -230,7 +181,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line25">line 25</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -400,7 +351,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line480">line 480</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line473">line 473</a>
     </li></ul></dd>
     
 
@@ -418,13 +369,13 @@
 
         
             
-<h4 class="name" id=".defaultHost"><span class="type-signature">(static) </span>defaultHost<span class="type-signature"> :string</span></h4>
+<h4 class="name" id=".defaultRedirectUrl"><span class="type-signature">(static) </span>defaultRedirectUrl<span class="type-signature"> :string</span></h4>
 
 
 
 
 <div class="description">
-    <p>The default HTTP address where bind for replies.</p>
+    <p>The default URL where redirect the authorization URL to.</p>
 </div>
 
 
@@ -490,85 +441,13 @@
 
         
             
-<h4 class="name" id=".defaultPort"><span class="type-signature">(static) </span>defaultPort<span class="type-signature"> :number</span></h4>
-
-
-
-
-<div class="description">
-    <p>The default HTTP port where bind for replies.</p>
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">number</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line473">line 473</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
 <h4 class="name" id="command"><span class="type-signature"></span>command<span class="type-signature"> :string</span></h4>
 
 
 
 
 <div class="description">
-    <p>The command to use to open the authentication URL. Default is <code>open \&quot;{{URL}}\&quot;</code>, where <code>{{URL}}</code> will replaced with the URL.</p>
+    <p>The command to use to open the authentication URL.</p>
 </div>
 
 
@@ -616,7 +495,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line54">line 54</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line48">line 48</a>
     </li></ul></dd>
     
 
@@ -688,7 +567,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line96">line 96</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line84">line 84</a>
     </li></ul></dd>
     
 
@@ -706,13 +585,85 @@
 
         
             
-<h4 class="name" id="host"><span class="type-signature"></span>host<span class="type-signature"> :string</span></h4>
+<h4 class="name" id="parsedRedirectUrl"><span class="type-signature"></span>parsedRedirectUrl<span class="type-signature"> :object</span></h4>
 
 
 
 
 <div class="description">
-    <p>The HTTP address where bind for replies.</p>
+    <p>The parsed URL where redirect the authorization URL to.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line105">line 105</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="redirectUrl"><span class="type-signature"></span>redirectUrl<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>The URL where redirect the authorization URL to. It will listen to the URL port locally.</p>
 </div>
 
 
@@ -761,78 +712,6 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="main.js.html">main.js</a>, <a href="main.js.html#line41">line 41</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="port"><span class="type-signature"></span>port<span class="type-signature"> :number</span></h4>
-
-
-
-
-<div class="description">
-    <p>The HTTP port where bind for replies.</p>
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">number</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -904,7 +783,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line68">line 68</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line56">line 56</a>
     </li></ul></dd>
     
 
@@ -976,79 +855,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line75">line 75</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="secure"><span class="type-signature"></span>secure<span class="type-signature"> :boolean</span></h4>
-
-
-
-
-<div class="description">
-    <p>If use HTTPS on the listening server.</p>
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">boolean</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line60">line 60</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line63">line 63</a>
     </li></ul></dd>
     
 
@@ -1120,7 +927,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line103">line 103</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line91">line 91</a>
     </li></ul></dd>
     
 
@@ -1192,7 +999,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line82">line 82</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line70">line 70</a>
     </li></ul></dd>
     
 
@@ -1270,7 +1077,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line89">line 89</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -1420,7 +1227,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line488">line 488</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line481">line 481</a>
     </li></ul></dd>
     
 
@@ -1579,7 +1386,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line185">line 185</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line175">line 175</a>
     </li></ul></dd>
     
 
@@ -1683,7 +1490,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line123">line 123</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line113">line 113</a>
     </li></ul></dd>
     
 
@@ -1787,7 +1594,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line159">line 159</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line149">line 149</a>
     </li></ul></dd>
     
 
@@ -1891,7 +1698,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line150">line 150</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line140">line 140</a>
     </li></ul></dd>
     
 
@@ -1995,7 +1802,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line141">line 141</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line131">line 131</a>
     </li></ul></dd>
     
 
@@ -2099,7 +1906,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line132">line 132</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line122">line 122</a>
     </li></ul></dd>
     
 
@@ -2203,7 +2010,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line168">line 168</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line158">line 158</a>
     </li></ul></dd>
     
 
@@ -2269,7 +2076,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Aug 18 2016 15:08:01 GMT+0200 (CEST) using the Minami theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Aug 30 2016 12:38:15 GMT+0200 (CEST) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -20,20 +20,20 @@ chai.use(chaiAsPromised);
 
 describe("OAuth2Platform", function(){
   beforeEach(function(){
-    this.subject = new OAuth2Platform({host: "HOST", port: 123, secure: true});
+    this.subject = new OAuth2Platform({redirectUrl: "https://HOST:123/"});
     this.subject.accessTokenUrl = "http://localhost/access";
     this.subject.authorizeUrl = "http://localhost/authorize";
   });
 
   describe(".buildUrl", function(){
     it("should return the valid URL", function(){
-      let url = Validations.validateUrl("clavem://id:secret@pinterest/cde", true);
+      let url = Validations.validateUrl("clavem://id:secret@pinterest/cde", true, false);
 
       expect(this.subject.buildUrl(url)).to.eq("http://localhost/authorize?client_id=id&response_type=code&redirect_uri=https%3A%2F%2FHOST%3A123%2F&scope=cde");
       expect(this.subject.clientId).to.eq("id");
       expect(this.subject.clientSecret).to.eq("secret");
 
-      url = Validations.validateUrl("clavem://id:secret@pinterest", true);
+      url = Validations.validateUrl("clavem://id:secret@pinterest", true, false);
       expect(this.subject.buildUrl(url)).to.eq("http://localhost/authorize?client_id=id&response_type=code&redirect_uri=https%3A%2F%2FHOST%3A123%2F");
     });
   });

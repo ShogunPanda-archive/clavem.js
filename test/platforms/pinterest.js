@@ -12,7 +12,7 @@ const PinterestPlatform = require("../../lib/platforms/pinterest");
 
 describe("PinterestPlatform", function(){
   beforeEach(function(){
-    this.subject = new PinterestPlatform({host: "HOST", port: 123, secure: true});
+    this.subject = new PinterestPlatform({redirectUrl: "https://HOST:123/"});
     this.subject.clientId = "ID";
     this.subject.clientSecret = "SECRET";
   });
@@ -28,22 +28,22 @@ describe("PinterestPlatform", function(){
     it("should correctly make sure the scope is always present", function(){
       let url = null;
 
-      url = Validations.validateUrl("clavem://id:secret@pinterest/cde", true);
+      url = Validations.validateUrl("clavem://id:secret@pinterest/cde", true, false);
       expect(this.subject.buildUrl(url)).to.eql(
         "https://api.pinterest.com/oauth/?client_id=id&response_type=code&redirect_uri=https%3A%2F%2FHOST%3A123%2F&scope=cde"
       );
 
-      url = Validations.validateUrl("clavem://id:secret@pinterest", true);
+      url = Validations.validateUrl("clavem://id:secret@pinterest", true, false);
       expect(this.subject.buildUrl(url)).to.eql(
         "https://api.pinterest.com/oauth/?client_id=id&response_type=code&redirect_uri=https%3A%2F%2FHOST%3A123%2F&scope=read_public"
       );
 
-      url = Validations.validateUrl("clavem://id:secret@pinterest/", true);
+      url = Validations.validateUrl("clavem://id:secret@pinterest/", true, false);
       expect(this.subject.buildUrl(url)).to.eql(
         "https://api.pinterest.com/oauth/?client_id=id&response_type=code&redirect_uri=https%3A%2F%2FHOST%3A123%2F&scope=read_public"
       );
 
-      url = Validations.validateUrl("clavem://pinterest/", true);
+      url = Validations.validateUrl("clavem://pinterest/", true, false);
       expect(this.subject.buildUrl(url)).to.eql(
         "https://api.pinterest.com/oauth/?client_id=&response_type=code&redirect_uri=https%3A%2F%2FHOST%3A123%2F&scope=read_public"
       );

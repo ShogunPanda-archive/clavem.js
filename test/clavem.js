@@ -29,24 +29,20 @@ describe("Clavem", function(){
   describe(".constructor", function(){
     it("should save parameters, load the response page and prepare for execution", function(){
       const testPort = 123;
-      const subject = new Clavem("HOST", testPort, "COMMAND", "SECURE");
+      const subject = new Clavem(`http://HOST:${testPort}`, "COMMAND");
 
-      expect(subject.host).to.eq("HOST");
-      expect(subject.port).to.eq(testPort);
+      expect(subject.redirectUrl).to.eq(`http://HOST:${testPort}`);
       expect(subject.command).to.eq("COMMAND");
-      expect(subject.secure).to.eq("SECURE");
       expect(subject.responseHandler).to.be.a("function");
       expect(subject.responsePage).to.be.a("string");
       expect(subject.responsePage.length).to.be.above(0);
       expect(subject.status).to.eq("waiting");
     });
 
-    it("should have good defaults for host, command and port", function(){
+    it("should have good defaults for redirectUrl and command", function(){
       const subject = new Clavem();
-      const clavemDefaultPort = 7772;
 
-      expect(subject.host).to.eq("localhost");
-      expect(subject.port).to.eq(clavemDefaultPort);
+      expect(subject.redirectUrl).to.eq("http://localhost:7772");
       expect(subject.command).to.eq("open \"{{URL}}\"");
     });
   });
@@ -107,7 +103,8 @@ describe("Clavem", function(){
 
   describe(".authorize", function(){
     beforeEach(function(){
-      this.subject = new Clavem("http://cowtech.it", port++);
+      this.port = port++;
+      this.subject = new Clavem(`http://localhost:${this.port}`);
     });
 
     it("should build the final URL, then perform the entire authorization", function(done){
@@ -116,7 +113,7 @@ describe("Clavem", function(){
       this.subject.authorize("http://cowtech.it", false, () => {
         performStub.restore();
 
-        expect(performStub.calledWith(`http://cowtech.it/?oauth_callback=http%3A%2F%2F%5Bhttp%3A%2F%2Fcowtech.it%5D%3A${this.subject.port}%2F`)).to.be.ok;
+        expect(performStub.calledWith(`http://cowtech.it/?oauth_callback=http%3A%2F%2Flocalhost%3A${this.port}`)).to.be.ok;
         done();
       });
     });
@@ -285,25 +282,31 @@ describe("Clavem", function(){
 
       const restore = () => performStub.restore();
 
-      this.subject.port = 10;
+      this.subject = new Clavem(`https://localhost`);
       return expect(this.subject.authorize("http://cowtech.it")).to.be.rejected.then(error => {
         restore();
 
         expect(error.code).to.eq("ERRORED");
-        expect(error.message).to.eq("listen EACCES 0.0.0.0:10");
+        expect(error.message).to.eq("listen EACCES 0.0.0.0:80");
       }).catch(restore);
     });
 
     it("should propagate HTTP errors to the callback", function(done){
       const performStub = sinon.stub(this.subject, "_performRequest").returns(Promise.resolve("OK"));
+      const setuidStub = sinon.stub(process, "setuid");
+      const oldUid = process.env.SUDO_UID;
+      process.env.SUDO_UID = 123;
 
-      this.subject.port = 10;
+      this.subject = new Clavem(`https://localhost`);
       this.subject.authorize("http://cowtech.it", error => {
         performStub.restore();
+        setuidStub.restore();
 
+        expect(setuidStub.calledWith(0)).to.be.ok;
         expect(error.code).to.eq("ERRORED");
-        expect(error.message).to.eq("listen EACCES 0.0.0.0:10");
+        expect(error.message).to.eq("listen EACCES 0.0.0.0:443");
 
+        process.env.SUDO_UID = oldUid;
         done();
       });
     });
@@ -419,7 +422,7 @@ describe("Clavem", function(){
 
   describe("._performRequest (private)", function(){
     beforeEach(function(){
-      this.subject = new Clavem("http://cowtech.it", port++);
+      this.subject = new Clavem(`http://localhost:${port++}`);
     });
 
     it("should perform success callback", function(done){
@@ -452,7 +455,7 @@ describe("Clavem", function(){
 
   describe("._closeServer (private)", function(){
     beforeEach(function(){
-      this.subject = new Clavem("http://cowtech.it", port++);
+      this.subject = new Clavem(`http://localhost:${port++}`);
     });
 
     it("should not do anything if no server was started ", function(){
@@ -479,7 +482,7 @@ describe("Clavem", function(){
 
   describe(".defaultHandler", function(){
     beforeEach(function(){
-      this.subject = new Clavem("http://cowtech.it", port++);
+      this.subject = new Clavem(`http://localhost:${port++}`);
     });
 
     it("should accept if there is a oauth_token parameter", function(){

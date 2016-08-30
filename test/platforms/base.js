@@ -12,12 +12,12 @@ const BasePlatform = require("../../lib/platforms/base");
 
 describe("BasePlatform", function(){
   beforeEach(function(){
-    this.subject = new BasePlatform({host: "HOST", port: 123, secure: true});
+    this.subject = new BasePlatform({redirectUrl: "http://HOST:123/"});
   });
 
   describe(".constructor", function(){
     it("should save client and parser", function(){
-      expect(this.subject.client.host).to.eq("HOST");
+      expect(this.subject.client.redirectUrl).to.eq("http://HOST:123/");
       expect(this.subject.urlParser).to.eql(urlParser);
     });
   });
@@ -26,10 +26,6 @@ describe("BasePlatform", function(){
     it("should return a valid HTTP link", function(){
       this.subject.client.secure = false;
       expect(this.subject.callbackUrl()).to.eq("http://HOST:123/");
-    });
-
-    it("should return a valid HTTPS link", function(){
-      expect(this.subject.callbackUrl()).to.eq("https://HOST:123/");
     });
   });
 

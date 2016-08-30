@@ -50,12 +50,13 @@ describe("Validations", function(){
     it("should reject unknown protocols, accepting only HTTP(S) and platform tags", function(){
       expect(() => Validations.validateUrl("http://cowtech.it")).not.to.throw(RangeError);
       expect(() => Validations.validateUrl("https://cowtech.it")).not.to.throw(RangeError);
-      expect(() => Validations.validateUrl("clavem://a:b@facebook")).not.to.throw(RangeError);
+      expect(() => Validations.validateUrl("clavem://a:b@facebook")).to.throw(RangeError);
+      expect(() => Validations.validateUrl("clavem://a:b@facebook", false, false)).not.to.throw(RangeError);
       expect(() => Validations.validateUrl("other")).to.throw(RangeError);
     });
 
     it("should reject invalid URLS by returning null, if asked to", function(){
-      expect(Validations.validateUrl("ftp://cowtech.it", false, false)).to.be.null;
+      expect(Validations.validateUrl("ftp://cowtech.it", false, false, false)).to.be.null;
     });
   });
 

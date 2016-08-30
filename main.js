@@ -18,6 +18,8 @@ const BasePlatform = require("./lib/platforms/base");
 const ClavemError = require("./lib/error");
 
 const HTTP_STATUS_NOT_FOUND = 404;
+const HTTP_DEFAULT_PORTS = {false: 80, true: 443};
+const PRIVILEGED_PORTS_BOUND = 1024;
 
 /**
  * The main Clavem object.
@@ -26,38 +28,24 @@ class Clavem{
   /**
    * Creates a new Clavem object.
    *
-   * @param {string} host The HTTP address where bind for replies. Default is `locahost`.
-   * @param {string | number} port The HTTP port where bind for replies. Default is `7772`.
+   * @param {string} redirectUrl The URL where redirect the authorization URL to. It will listen to the URL port locally. Default is `http://localhost:7772`.
    * @param {string} command The command to use to open the authentication URL. Default is `open \"{{URL}}\"`, where `{{URL}}` will replaced with the URL.
-   * @param {boolean} secure If use HTTPS on the listening server.
    */
-  constructor(host, port, command, secure = false){
+  constructor(redirectUrl, command){
     // Copy arguments
     /**
-     * The HTTP address where bind for replies.
+     * The URL where redirect the authorization URL to. It will listen to the URL port locally.
      *
      * @type {string}
      */
-    this.host = host;
+    this.redirectUrl = redirectUrl;
 
     /**
-     * The HTTP port where bind for replies.
-     * @type {number}
-     */
-    this.port = port;
-
-    /**
-     * The command to use to open the authentication URL. Default is `open \"{{URL}}\"`, where `{{URL}}` will replaced with the URL.
+     * The command to use to open the authentication URL.
      *
      * @type {string}
      */
     this.command = command;
-
-    /**
-     * If use HTTPS on the listening server.
-     * @type {boolean}
-     */
-    this.secure = secure;
 
     // Setup properties
     /**
@@ -103,16 +91,18 @@ class Clavem{
     this.server = null;
 
     // Sanitize arguments
-    if(!Validations.isPresent(this.host))
-      this.host = Clavem.defaultHost;
+    if(!Validations.isPresent(this.redirectUrl))
+      this.redirectUrl = Clavem.defaultRedirectUrl;
 
     if(!Validations.isPresent(this.command))
       this.command = Clavem.defaultCommand;
 
-    if(this.port)
-      Validations.validatePort(this.port);
-    else
-      this.port = Clavem.defaultPort;
+    /**
+     * The parsed URL where redirect the authorization URL to.
+     *
+     * @type {object}
+     */
+    this.parsedRedirectUrl = Validations.validateUrl(this.redirectUrl, true, true);
   }
 
   /**
@@ -253,21 +243,31 @@ class Clavem{
   _performAuthorization(url, timeout, callback){
     const hasCallback = typeof callback === "function";
 
+    const secure = this.parsedRedirectUrl.protocol === "https";
+    const port = this.parsedRedirectUrl.port || HTTP_DEFAULT_PORTS[secure.toString()];
+
     return new Promise((resolve, reject) => {
       // Create the server
       this.express = express();
 
       // Start the main route
-      this.express.get("/", (req, res) => this._handleResponse(resolve, reject, res, req, hasCallback, callback));
+      this.express.get(this.parsedRedirectUrl.pathname, (req, res) => this._handleResponse(resolve, reject, res, req, hasCallback, callback));
 
       // Disable all other routes
       this.express.get("/:path", (req, res) => res.status(HTTP_STATUS_NOT_FOUND).type("text").send("Not found."));
 
       // Listen to the port
-      this.server = this.secure ? https.createServer(this._sslConfig(), this.express) : http.createServer(this.express);
+      this.server = secure ? https.createServer(this._sslConfig(), this.express) : http.createServer(this.express);
+
+      if(Clavem.debug)
+        console.log(`Listen for replies on 0.0.0.0:${port} ...`);
+
+      // Switch the process as root in order to listen to privileged ports if running through sudo
+      if(process.env.SUDO_UID && port < PRIVILEGED_PORTS_BOUND)
+        process.setuid(0);
 
       this.server
-        .listen(this.port, () => this._performRequest(url).catch(reject))
+        .listen(port, () => this._performRequest(url).catch(reject))
         .on("error", reject);
 
       // Disable Keep-Alive since we only reply to a single request
@@ -367,7 +367,7 @@ class Clavem{
    * @private
    */
   _buildFinalUrl(url, skipCallback){
-    url = Validations.validateUrl(url, true);
+    url = Validations.validateUrl(url, true, false);
 
     // If not HTTP(S), use the platform
     if(!url.protocol.match(/^http(s?)$/)){
@@ -459,18 +459,11 @@ class Clavem{
 Clavem.debug = (process.env.NODE_DEBUG || "").indexOf("clavem") !== -1;
 
 /**
- * The default HTTP address where bind for replies.
+ * The default URL where redirect the authorization URL to.
  *
  * @type {string}
  */
-Clavem.defaultHost = "localhost";
-
-/**
- * The default HTTP port where bind for replies.
- *
- * @type {number}
- */
-Clavem.defaultPort = 7772;
+Clavem.defaultRedirectUrl = "http://localhost:7772";
 
 /**
  * The default command to use to open the authentication URL. Default is `open \"{{URL}}\"`, where `{{URL}}` will replaced with the URL.
