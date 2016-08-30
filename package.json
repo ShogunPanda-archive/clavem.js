@@ -1,5 +1,5 @@
 {
-  "name": "clavem.js",
+  "name": "clavem",
   "version": "1.0.0",
   "description": "A local callback server for oAuth web-flow.",
   "main": "main.js",
