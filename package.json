@@ -12,6 +12,9 @@
     "README.md",
     "CHANGELOG.md"
   ],
+  "bin": {
+    "clavem" : "./bin/clavem"
+  },
   "scripts": {
     "postpublish": "git push origin --tags && git push origin",
     "test": "./node_modules/.bin/mocha test/**/*.js",

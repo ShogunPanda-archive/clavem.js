@@ -1,3 +1,7 @@
+### 2016-09-01 / 2.0.1
+
+* Added missing binary file.
+
 ### 2016-08-30 / 2.0.0
 
 * Change the `Clavem` interface to accept `redirectUrl` in place of `host`, `port`, `ssl` commands to completely customize redirect URL.
