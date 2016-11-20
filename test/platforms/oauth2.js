@@ -14,6 +14,7 @@ const sinon = require("sinon");
 const expect = require("chai").expect;
 
 const Validations = require("../../lib/validations");
+const BasePlatform = require("../../lib/platforms/base");
 const OAuth2Platform = require("../../lib/platforms/oauth2");
 
 chai.use(chaiAsPromised);
@@ -94,6 +95,8 @@ describe("OAuth2Platform", function(){
         });
 
         it("should refresh with a access token", function(done){
+          BasePlatform.debug = true;
+          const logStub = sinon.stub(console, "log");
           const requestStub = sinon.stub(request, "post");
 
           requestStub.onFirstCall().yields(null, {statusCode: 200}, {access_token: "SHORT_TOKEN"});
@@ -104,7 +107,11 @@ describe("OAuth2Platform", function(){
 
           this.subject.handleResponse({code: "CODE"}, (error, token) => {
             requestStub.restore();
+            logStub.restore();
 
+            expect(logStub.calledWith(
+              'Performing HTTP POST request to http://localhost/access with data {"form":{"client_id":"id","client_secret":"secret","redirect_uri":"https://HOST:123/","grant_type":"authorization_code","code":"CODE"}}' // eslint-disable-line max-len
+            )).to.be.ok;
             expect(requestStub.calledWith(
               {
                 url: "http://localhost/refresh", json: true,
@@ -115,6 +122,8 @@ describe("OAuth2Platform", function(){
             expect(token).to.eql("TOKEN");
             done();
           });
+
+          BasePlatform.debug = false;
         });
 
         it("should handle network errors", function(done){

@@ -1,3 +1,7 @@
+### 2016-11-20 / 2.0.3
+
+* Facebook Login fix.
+
 ### 2016-09-20 / 2.0.2
 
 * Fixed NPM badge.

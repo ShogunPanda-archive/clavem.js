@@ -24,6 +24,14 @@ describe("FacebookPlatform", function(){
     });
   });
 
+  describe("._exchangeCodePayload (private)", function(){
+    it("should correctly return payload to refresh the token", function(){
+      this.subject.client = {redirectUrl: "URL"};
+
+      expect(this.subject._exchangeCodePayload("TOKEN")).to.eql({client_id: "ID", client_secret: "SECRET", code: "TOKEN", redirect_uri: "URL/"});
+    });
+  });
+
   describe("._refreshTokenPayload (private)", function(){
     it("should correctly return payload to refresh the token", function(){
       expect(this.subject._refreshTokenPayload("TOKEN")).to.eql({

@@ -191,13 +191,13 @@ describe("Clavem", function(){
         expect(this.subject.error.message).to.eq("The timeout must be a number greater than 0.");
 
         done();
-      });
+      }).catch(() => false);
     });
 
     it("should start an Express server and then perform the request", function(done){
       const performStub = sinon.stub(this.subject, "_performRequest").returns(Promise.resolve("OK"));
 
-      const promise = this.subject.authorize("http://cowtech.it");
+      const promise = this.subject.authorize("http://cowtech.it").catch(() => false);
 
       // Wait for the server to start
       setTimeout(() => {
@@ -220,7 +220,7 @@ describe("Clavem", function(){
         const execSpy = sinon.spy(childProcess, "exec");
         const logStub = sinon.stub(console, "log");
 
-        const promise = this.subject.authorize("http://cowtech.it", true);
+        const promise = this.subject.authorize("http://cowtech.it", true).catch(() => false);
 
         setTimeout(() => {
           chai.request(this.subject.express).get("/?oauth_token=foo").end(function(){
@@ -282,7 +282,7 @@ describe("Clavem", function(){
 
       const restore = () => performStub.restore();
 
-      this.subject = new Clavem(`https://localhost`);
+      this.subject = new Clavem("https://localhost");
       return expect(this.subject.authorize("http://cowtech.it")).to.be.rejected.then(error => {
         restore();
 
@@ -297,7 +297,7 @@ describe("Clavem", function(){
       const oldUid = process.env.SUDO_UID;
       process.env.SUDO_UID = 123;
 
-      this.subject = new Clavem(`https://localhost`);
+      this.subject = new Clavem("https://localhost");
       this.subject.authorize("http://cowtech.it", error => {
         performStub.restore();
         setuidStub.restore();
@@ -308,7 +308,7 @@ describe("Clavem", function(){
 
         process.env.SUDO_UID = oldUid;
         done();
-      });
+      }).catch(() => false);
     });
 
     it("should handle timeouts", function(){
@@ -415,7 +415,7 @@ describe("Clavem", function(){
           expect(token).to.be.undefined;
 
           done();
-        });
+        }).catch(() => false);
       });
     });
   });
@@ -449,7 +449,7 @@ describe("Clavem", function(){
         expect(error.code).to.eq("ERRORED");
         expect(error.message).to.eq("ERROR");
         done();
-      });
+      }).catch(() => false);
     });
   });
 
