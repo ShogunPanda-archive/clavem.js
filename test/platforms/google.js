@@ -26,7 +26,7 @@ describe("GooglePlatform", function(){
   describe("._authorizePayload (private)", function(){
     it("should append the offline access type", function(){
       expect(this.subject._authorizePayload("http://cowtech.it")).to.eql({
-        access_type: "offline", client_id: "ID", redirect_uri: "https://HOST:123/", response_type: "code"
+        access_type: "offline", prompt: "consent", client_id: "ID", redirect_uri: "https://HOST:123/", response_type: "code"
       });
     });
   });

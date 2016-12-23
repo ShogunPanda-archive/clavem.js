@@ -1,4 +1,8 @@
-### 2016-11-20 / 2.1.0
+### 2016-12-23 / 2.1.1
+
+* Add `prompt=consent` to Google authentication URL in order to always receive the `refresh_token`.
+
+### 2016-12-23 / 2.1.0
 
 * Also show the refresk token for OAuth 2.0.
 * UI fixes.
