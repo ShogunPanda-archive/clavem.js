@@ -1,3 +1,8 @@
+### 2016-11-20 / 2.1.0
+
+* Also show the refresk token for OAuth 2.0.
+* UI fixes.
+
 ### 2016-11-20 / 2.0.3
 
 * Facebook Login fix.

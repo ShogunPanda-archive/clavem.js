@@ -32,7 +32,7 @@ describe("CLI", function(){
       this.cliMock.verify();
       logStub.restore();
 
-      expect(logStub.calledWith("SUCCESS: Authorization succeded. The authorization token is: TOKEN")).to.be.ok;
+      expect(logStub.calledWith("SUCCESS: Authorization succeded. The authorization token is: \"TOKEN\"")).to.be.ok;
     });
   });
 

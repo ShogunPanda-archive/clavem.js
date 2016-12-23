@@ -50,9 +50,9 @@
       }
 
       pre{
-        overflow-x: auto;
-        overflow-y: hidden;
+        max-width: 100%;
         padding: 1rem 0;
+        white-space: pre;
       }
 
       .muted{
@@ -94,7 +94,7 @@
       <div class="mdl-card__supporting-text">
         {{#succeeded}}
           <h3>Authorization completed!</h3>
-          <h5>Your authorization code is: <pre>{{tokenSerialized}}</pre></h5>
+          <h5>Authorization results are: <pre>{{tokenSerialized}}</pre></h5>
         {{/succeeded}}
         {{#errored}}
         <h3 class="title">Authorization failed!</h3>

@@ -411,7 +411,7 @@ class Clavem{
       else if(token){
         this.status = "succeeded";
         this.token = token;
-        this.tokenSerialized = typeof token === "string" ? token : JSON.stringify(token);
+        this.tokenSerialized = typeof token === "string" ? token : JSON.stringify(token, null, 2);
       }else
         responseError = new ClavemError("denied", "Authorization denied by the platform.");
 

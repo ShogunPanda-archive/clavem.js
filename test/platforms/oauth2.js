@@ -119,7 +119,7 @@ describe("OAuth2Platform", function(){
               }
             )).to.be.ok;
 
-            expect(token).to.eql("TOKEN");
+            expect(token).to.eql({access_token: "TOKEN", refresh_token: "SHORT_TOKEN"});
             done();
           });
 
