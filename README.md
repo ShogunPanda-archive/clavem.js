@@ -1,9 +1,9 @@
 # clavem.js
 
-[![Package Version](https://badge.fury.io/js/clavem.png)](http://badge.fury.io/js/clavem)
-[![Dependency Status](https://gemnasium.com/ShogunPanda/clavem.js.png?travis)](https://gemnasium.com/ShogunPanda/clavem.js)
-[![Build Status](https://secure.travis-ci.org/ShogunPanda/clavem.js.png?branch=master)](http://travis-ci.org/ShogunPanda/clavem.js)
-[![Coverage Status](https://coveralls.io/repos/github/ShogunPanda/clavem.js/badge.svg?branch=master)](https://coveralls.io/github/ShogunPanda/clavem.js?branch=master)
+[![Package Version](https://img.shields.io/npm/v/clavem.svg)](https://npmjs.com/package/clavem)
+[![Dependency Status](https://img.shields.io/gemnasium/ShogunPanda/clavem.js.svg)](https://gemnasium.com/ShogunPanda/clavem.js)
+[![Build Status](https://img.shields.io/travis/ShogunPanda/clavem.js.svg)](http://travis-ci.org/ShogunPanda/clavem.js)
+[![Coverage Status](https://img.shields.io/coveralls/github/ShogunPanda/clavem.js.svg)](https://coveralls.io/github/ShogunPanda/clavem.js)
 
 A local callback server for oAuth web-flow.
 
@@ -80,4 +80,4 @@ The API documentation can be found [here](https://sw.cowtech.it/clavem.js/docs).
 
 Copyright (C) 2016 and above Shogun <shogun@cowtech.it>.
 
-Licensed under the MIT license, which can be found at http://opensource.org/licenses/MIT.
+Licensed under the MIT license, which can be found at https://choosealicense.com/licenses/mit.
