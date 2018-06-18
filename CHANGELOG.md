@@ -1,3 +1,8 @@
+### 2018-06-18 / 2.1.2
+
+* chore: End of development notice.
+* Updated license links and badges.
+
 ### 2016-12-23 / 2.1.1
 
 * Add `prompt=consent` to Google authentication URL in order to always receive the `refresh_token`.
