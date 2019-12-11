@@ -1,17 +1,8 @@
 # clavem.js
 
-[![Package Version](https://img.shields.io/npm/v/clavem.svg)](https://npmjs.com/package/clavem)
-[![Dependency Status](https://img.shields.io/gemnasium/ShogunPanda/clavem.js.svg)](https://gemnasium.com/ShogunPanda/clavem.js)
-[![Build Status](https://img.shields.io/travis/ShogunPanda/clavem.js.svg)](http://travis-ci.org/ShogunPanda/clavem.js)
-[![Coverage Status](https://img.shields.io/coveralls/github/ShogunPanda/clavem.js.svg)](https://coveralls.io/github/ShogunPanda/clavem.js)
-
-## END OF DEVELOPMENT NOTICE
-
-# This module has been discontinued in favor of https://github.com/ShogunPanda/clavem.
+## END OF DEVELOPMENT NOTICE - This package has been discontinued
 
 A local callback server for oAuth web-flow.
-
-https://github.com/ShogunPanda/clavem.js
 
 ## Supported implementations.
 
@@ -44,29 +35,25 @@ The executable will open the user's browser, handle the authentication and then 
 The API equivalent for the CLI example above is like the following:
 
 ```javascript
-const Clavem = require("clavem")
+const Clavem = require('clavem')
 
 const client = new Clavem()
 
 client
-  .authorize("clavem://abcd:1234@facebook/manage_pages")
+  .authorize('clavem://abcd:1234@facebook/manage_pages')
   .then(token => {
-    console.log(
-      `SUCCESS: Authorization succeded. The authorization token is: ${token}`
-    )
+    console.log(`SUCCESS: Authorization succeded. The authorization token is: ${token}`)
   })
   .catch(e => {
     switch (e.code) {
-      case "DENIED":
-        console.error("ERROR: Authorization denied.")
+      case 'DENIED':
+        console.error('ERROR: Authorization denied.')
         break
-      case "TIMEOUT":
-        console.error("ERROR: Authorization timed out.")
+      case 'TIMEOUT':
+        console.error('ERROR: Authorization timed out.')
         break
       default:
-        console.error(
-          `ERROR: Authorization failed due to an error - ${e.message}`
-        )
+        console.error(`ERROR: Authorization failed due to an error - ${e.message}`)
         break
     }
   })
